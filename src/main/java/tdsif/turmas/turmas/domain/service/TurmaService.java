@@ -5,8 +5,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import tdsif.turmas.turmas.domain.dto.NovaTurma;
 import tdsif.turmas.turmas.domain.dto.TurmaDTO;
 import tdsif.turmas.turmas.domain.entity.Turma;
 import tdsif.turmas.turmas.domain.repository.TurmaRepository;
@@ -26,12 +29,12 @@ public class TurmaService {
         return dto;
     }
 
-    public TurmaDTO findById(String id){
+    public TurmaDTO findById(String id) {
         Optional<Turma> turmaOptional = turmaRepository.findById(id);
         if (turmaOptional.isPresent()) {
             Turma turma = turmaOptional.get();
             return converte(turma);
-        } else {            
+        } else {
             return null;
         }
     }
@@ -46,6 +49,16 @@ public class TurmaService {
 
     public List<TurmaDTO> findBySigla(String sigla) {
         return turmaRepository.findBySigla(sigla).stream().map(this::converte).collect(Collectors.toList());
+    }
+
+    public TurmaDTO save(Turma turma) {
+        if(turmaRepository.existsById(turma.getId())){
+            throw new DataIntegrityViolationException("ja turma com esse codigo, verifique a sigla, ano e semestre");
+        }
+        turma = turmaRepository.save(turma);
+        TurmaDTO dto = new TurmaDTO();
+        dto = this.converte(turma);        
+        return dto;
     }
 
 }

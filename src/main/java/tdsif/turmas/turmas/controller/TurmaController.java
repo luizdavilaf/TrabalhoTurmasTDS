@@ -56,16 +56,12 @@ public class TurmaController {
         try {
             Turma newTurma = new Turma(turma.getAno(), turma.getNome(), turma.getSigla(), turma.getVagasMax(),
                     turma.getVagasMin(), turma.getSemestre());
-            if (turmaRepository.existsById(newTurma.getId())) {
-                throw new DataIntegrityViolationException("Já existe uma turma com o mesmo ID");
-            }
-            turmaRepository.save(newTurma);
-            TurmaDTO dto = new TurmaDTO();
-            BeanUtils.copyProperties(newTurma, dto);
-            return ResponseEntity.ok(dto);
+            TurmaDTO turmaDTO = turmaService.save(newTurma);
+            return ResponseEntity.ok(turmaDTO);
+
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest()
-                    .body("Já existe uma turma com o mesmo ID ou campo único.");
+                    .body(e.getMessage());
         }
 
     }
