@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import tdsif.turmas.turmas.domain.entity.Aluno;
 
-public interface AlunoRepository extends CrudRepository<Aluno, String>{
+public interface AlunoRepository extends CrudRepository<Aluno, Integer>{
     List<Aluno> findAll();
 
     Optional<Aluno> findById(Integer id);

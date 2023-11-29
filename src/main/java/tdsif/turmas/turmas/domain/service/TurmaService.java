@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import tdsif.turmas.turmas.domain.dto.AlunoDTO;
 import tdsif.turmas.turmas.domain.dto.NovaTurma;
 import tdsif.turmas.turmas.domain.dto.TurmaDTO;
@@ -17,21 +18,16 @@ import tdsif.turmas.turmas.domain.entity.Aluno;
 import tdsif.turmas.turmas.domain.entity.Turma;
 import tdsif.turmas.turmas.domain.repository.AlunoRepository;
 import tdsif.turmas.turmas.domain.repository.TurmaRepository;
-
+@RequiredArgsConstructor
 @Service
 public class TurmaService {
 
     private final TurmaRepository turmaRepository;
-    private AlunoService alunoService;
+    private final AlunoRepository alunoRepository;
+    
+   
 
-    public TurmaService(
-            TurmaRepository turmaRepository,
-            AlunoService alunoService) {
-        this.turmaRepository = turmaRepository;
-        this.alunoService = alunoService;
-    }
-
-    private TurmaDTO converte(Turma turma) {
+    public TurmaDTO converte(Turma turma) {
         TurmaDTO dto = new TurmaDTO();
         BeanUtils.copyProperties(turma, dto);
         return dto;
@@ -45,6 +41,12 @@ public class TurmaService {
         } else {
             return null;
         }
+    }
+
+    public AlunoDTO converteAluno(Aluno aluno) {
+        AlunoDTO dto = new AlunoDTO();
+        BeanUtils.copyProperties(aluno, dto);
+        return dto;
     }
 
     public List<TurmaDTO> findAll() {
@@ -76,12 +78,12 @@ public class TurmaService {
         Optional<Turma> turmaOptional = turmaRepository.findById(turmaId);
         if (turmaOptional.isPresent()) {
             Turma turma = turmaOptional.get();
-            Aluno aluno = alunoService.findByIdObject(alunoId);
+            Aluno aluno = alunoRepository.findById(alunoId).orElseThrow();
             if (aluno != null) {
                 turma.getAlunos().add(aluno);
                 turma = turmaRepository.save(turma);
                 aluno.getTurmas().add(turma);
-                alunoService.update(aluno);
+                //alunoService.update(aluno);
                 return converte(turma);
             } else {
                 throw new Exception("aluno nao encontrado");
@@ -90,6 +92,8 @@ public class TurmaService {
             throw new Exception("turma nao encontrada");
         }
     }
+
+
 
     public List<AlunoDTO> getAlunos(String turmaId) throws Exception {
         Optional<Turma> turmaOptional = turmaRepository.findById(turmaId);
@@ -101,7 +105,7 @@ public class TurmaService {
                     throw new Exception("turma vazia");
                 }
                 for (Aluno aluno : alunos) {
-                    alunoDTOs.add(alunoService.converte(aluno));
+                    alunoDTOs.add(converteAluno(aluno));
                 }
                 return alunoDTOs;
             }else {

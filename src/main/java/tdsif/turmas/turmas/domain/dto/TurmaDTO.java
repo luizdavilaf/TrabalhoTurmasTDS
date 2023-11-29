@@ -23,7 +23,7 @@ public class TurmaDTO {
 
     private Integer semestre;
 
-    //private List<Aluno> alunos;
+    private List<AlunoDTO> alunos;
 
     
 }

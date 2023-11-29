@@ -58,13 +58,24 @@ public class AlunoController {
 
     }
 
-    @GetMapping("/alunos/{id}")
+    @GetMapping("/api/v1/alunos/{id}")
     public ResponseEntity<AlunoDTO> getAlunoById(@PathVariable Integer id) {        
         AlunoDTO Aluno = AlunoService.findById(id);
         if (Aluno != null) {
             return ResponseEntity.ok(Aluno);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/api/v1/alunos/{alunoId}/matriculas")
+    public ResponseEntity<?> getMatriculas(@PathVariable Integer alunoId) {
+        try {
+
+            return ResponseEntity.ok(AlunoService.getTurmas(alunoId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro interno ao processar a requisição: " + e.getMessage());
+
         }
     }
 }

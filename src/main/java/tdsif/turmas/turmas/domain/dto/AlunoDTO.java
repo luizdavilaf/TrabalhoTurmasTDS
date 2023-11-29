@@ -17,7 +17,7 @@ public class AlunoDTO {
     
     private String nome;
 
-    //private List<Aluno> turmas;
+    //private List<TurmaDTO> turmas;
    
 
     

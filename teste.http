@@ -31,7 +31,7 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:8080/api/v1/turmas/POO-2023-1/matriculas
+POST http://localhost:8080/api/v1/turmas/POO-2024-1/matriculas
 Content-Type: application/json
 
 {	
@@ -42,6 +42,14 @@ Content-Type: application/json
 ###
 
 GET http://localhost:8080/api/v1/turmas/POO-2023-1/matriculas
+Content-Type: application/json
+
+
+###
+
+###
+
+GET http://localhost:8080/api/v1/alunos/1/matriculas
 Content-Type: application/json
 
 

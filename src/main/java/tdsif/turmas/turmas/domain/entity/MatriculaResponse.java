@@ -1,7 +1,10 @@
 package tdsif.turmas.turmas.domain.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import tdsif.turmas.turmas.domain.dto.TurmaDTO;
-
+@Data
+@NoArgsConstructor
 public class MatriculaResponse {
     private String mensagem;
     private TurmaDTO turma;

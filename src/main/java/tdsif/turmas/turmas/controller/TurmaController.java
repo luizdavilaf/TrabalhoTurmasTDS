@@ -1,6 +1,7 @@
 package tdsif.turmas.turmas.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,16 +83,17 @@ public class TurmaController {
     }
 
     @PostMapping("/api/v1/turmas/{turmaId}/matriculas")
-    public ResponseEntity<String> matricularAlunoNaTurma(
+    public ResponseEntity<?> matricularAlunoNaTurma(
             @PathVariable String turmaId,
             @RequestBody MatriculaRequest matriculaRequest) {
         try {
             TurmaDTO turma = turmaService.matricular(turmaId, matriculaRequest.getAlunoId());
             MatriculaResponse matriculaResponse = new MatriculaResponse("Aluno matriculado com sucesso.", turma);
-            return ResponseEntity.ok(matriculaResponse.toString());
+            System.out.println(matriculaResponse);
+            return ResponseEntity.ok(matriculaResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                    .body(e.getMessage());
+                    .body(Map.of("mensagem", e.getMessage()));
         }
     }
 
