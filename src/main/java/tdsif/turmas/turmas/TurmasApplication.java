@@ -30,18 +30,17 @@ public class TurmasApplication {
 
 
 
-		Turma a = new Turma("2023","Pogramacao orietado a objetos","POO", 50, 2 ,1);
-		// a.setAno("2023");
-		// a.setNome("Pogramacao orietado a objetos");
-		// a.setSigla("POO");		
-		// a.setVagasMax(50);
-		// a.setVagasMin(2);
-		// a.setSemestre(1);
-		
-		//a.setId(a.getSigla()+a.getAno()+a.getSemestre());
+		Turma turma = new Turma();
+		turma.setAno("2023");
+		turma.setNome("Pogramacao orietado a objetos");
+		turma.setSigla("POO");		
+		turma.setVagasMax(50);
+		turma.setVagasMin(2);
+		turma.setSemestre(1);		
+		turma.setId(turma.getSigla() + "-" + turma.getAno() + "-" + turma.getSemestre());
 		
 
-		turmaRepository.save(a);
+		turmaRepository.save(turma);
 
 		
 

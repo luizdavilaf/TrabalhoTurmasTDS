@@ -1,6 +1,10 @@
 package tdsif.turmas.turmas.domain.dto;
 
+import java.util.List;
+
 import lombok.Data;
+import lombok.ToString;
+import tdsif.turmas.turmas.domain.entity.Aluno;
 
 @Data
 public class TurmaDTO {
@@ -18,6 +22,8 @@ public class TurmaDTO {
     private Integer vagasMax;
 
     private Integer semestre;
+
+    //private List<Aluno> alunos;
 
     
 }

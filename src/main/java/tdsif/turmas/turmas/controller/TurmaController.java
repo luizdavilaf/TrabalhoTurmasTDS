@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import tdsif.turmas.turmas.domain.dto.NovaTurma;
 import tdsif.turmas.turmas.domain.dto.TurmaDTO;
+import tdsif.turmas.turmas.domain.entity.Aluno;
+import tdsif.turmas.turmas.domain.entity.MatriculaRequest;
+import tdsif.turmas.turmas.domain.entity.MatriculaResponse;
 import tdsif.turmas.turmas.domain.entity.Turma;
 import tdsif.turmas.turmas.domain.repository.TurmaRepository;
 import tdsif.turmas.turmas.domain.service.TurmaService;
@@ -38,32 +41,34 @@ public class TurmaController {
     }
 
     @GetMapping("/api/v1/turmas")
-    public ResponseEntity<List<TurmaDTO>> getTurmas(
+    public ResponseEntity<?> getTurmas(
             @RequestParam(name = "sigla", required = false) String sigla,
             @RequestParam(name = "ano", required = false) String ano) {
-        if (sigla != null && !sigla.isEmpty()) {
-            List<TurmaDTO> result = turmaService.findBySigla(sigla);
-            return ResponseEntity.ok(result);
-        } else if (ano != null && !ano.isEmpty()) {
-            List<TurmaDTO> result = turmaService.findByAno(ano);
-            return ResponseEntity.ok(result);
+        try {
+            if (sigla != null && !sigla.isEmpty()) {
+                List<TurmaDTO> result = turmaService.findBySigla(sigla);
+                return ResponseEntity.ok(result);
+            } else if (ano != null && !ano.isEmpty()) {
+                List<TurmaDTO> result = turmaService.findByAno(ano);
+                return ResponseEntity.ok(result);
+            }
+            return ResponseEntity.ok(turmaService.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro interno ao processar a requisição: " + e.getMessage());
+
         }
-        return ResponseEntity.ok(turmaService.findAll());
     }
 
     @PostMapping("/api/v1/turmas")
     public ResponseEntity<?> salvarTurma(@Valid @RequestBody NovaTurma turma) {
         try {
-            Turma newTurma = new Turma(turma.getAno(), turma.getNome(), turma.getSigla(), turma.getVagasMax(),
-                    turma.getVagasMin(), turma.getSemestre());
-            TurmaDTO turmaDTO = turmaService.save(newTurma);
+            TurmaDTO turmaDTO = turmaService.save(turma);
             return ResponseEntity.ok(turmaDTO);
 
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest()
                     .body(e.getMessage());
         }
-
     }
 
     @GetMapping("/turmas/{id}")
@@ -73,6 +78,31 @@ public class TurmaController {
             return ResponseEntity.ok(turma);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/api/v1/turmas/{turmaId}/matriculas")
+    public ResponseEntity<String> matricularAlunoNaTurma(
+            @PathVariable String turmaId,
+            @RequestBody MatriculaRequest matriculaRequest) {
+        try {
+            TurmaDTO turma = turmaService.matricular(turmaId, matriculaRequest.getAlunoId());
+            MatriculaResponse matriculaResponse = new MatriculaResponse("Aluno matriculado com sucesso.", turma);
+            return ResponseEntity.ok(matriculaResponse.toString());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/api/v1/turmas/{turmaId}/matriculas")
+    public ResponseEntity<?> getMatriculas(@PathVariable String turmaId) {
+        try {
+
+            return ResponseEntity.ok(turmaService.getAlunos(turmaId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro interno ao processar a requisição: " + e.getMessage());
+
         }
     }
 }
