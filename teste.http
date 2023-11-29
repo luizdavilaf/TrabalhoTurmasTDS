@@ -35,7 +35,7 @@ POST http://localhost:8080/api/v1/turmas/POO-2023-1/matriculas
 Content-Type: application/json
 
 {	
-  "alunoId": 3
+  "alunoId": 1
 }
 
 

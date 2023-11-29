@@ -28,7 +28,8 @@ public class TurmasApplication {
 	void popularBanco(){
 		System.out.println("Rodando o Post Construct");
 
-
+		//FICOU FALTANDO FAZER AS MATRICULAS PELO LADO DOS ALUNOS
+		//E RETORNAR OS ALUNOS QUANDO FAZ UMA MATRICULA(NAO ESSENCIAL)
 
 		Turma turma = new Turma();
 		turma.setAno("2023");
